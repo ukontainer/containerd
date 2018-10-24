@@ -334,7 +334,7 @@ func (o *snapshotter) mounts(s storage.Snapshot) []mount.Mount {
 	return []mount.Mount{
 		{
 			Source: source,
-			Type:   "bind",
+			Type:   "symlink",
 			Options: []string{
 				roFlag,
 				"rbind",
