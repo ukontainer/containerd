@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"runtime"
 
 	"github.com/opencontainers/runc/libcontainer/system"
 )
@@ -31,6 +32,10 @@ const OOMScoreMaxKillable = -999
 
 // SetOOMScore sets the oom score for the provided pid
 func SetOOMScore(pid, score int) error {
+	if runtime.GOOS != "linux" {
+		return nil
+	}
+
 	path := fmt.Sprintf("/proc/%d/oom_score_adj", pid)
 	f, err := os.OpenFile(path, os.O_WRONLY, 0)
 	if err != nil {

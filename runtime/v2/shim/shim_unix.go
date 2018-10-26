@@ -61,7 +61,7 @@ func serveListener(path string) (net.Listener, error) {
 		if len(path) > 106 {
 			return nil, errors.Errorf("%q: unix socket path too long (> 106)", path)
 		}
-		l, err = net.Listen("unix", "\x00"+path)
+		l, err = net.Listen("unix", ""+path)
 	}
 	if err != nil {
 		return nil, err
