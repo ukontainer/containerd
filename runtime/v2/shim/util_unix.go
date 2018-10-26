@@ -48,26 +48,27 @@ func SetScore(pid int) error {
 
 // SocketAddress returns an abstract socket address
 func SocketAddress(ctx context.Context, id string) (string, error) {
-	ns, err := namespaces.NamespaceRequired(ctx)
+	_, err := namespaces.NamespaceRequired(ctx)
 	if err != nil {
 		return "", err
 	}
-	d := sha256.Sum256([]byte(filepath.Join(ns, id)))
-	return filepath.Join(string(filepath.Separator), "containerd-shim", fmt.Sprintf("%x.sock", d)), nil
+	return filepath.Abs("shim.sock")
 }
 
 // AnonDialer returns a dialer for an abstract socket
 func AnonDialer(address string, timeout time.Duration) (net.Conn, error) {
 	address = strings.TrimPrefix(address, "unix://")
-	return net.DialTimeout("unix", "\x00"+address, timeout)
+	return net.DialTimeout("unix", ""+address, timeout)
 }
 
 // NewSocket returns a new socket
 func NewSocket(address string) (*net.UnixListener, error) {
+/*
 	if len(address) > 106 {
 		return nil, errors.Errorf("%q: unix socket path too long (> 106)", address)
 	}
-	l, err := net.Listen("unix", "\x00"+address)
+*/
+	l, err := net.Listen("unix", ""+address)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to listen to abstract unix socket %q", address)
 	}

@@ -14,7 +14,7 @@
 
 
 #darwin specific settings
-COMMANDS += containerd-shim
+COMMANDS += containerd-shim containerd-shim-v1-darwin
 
 # amd64 supports go test -race
 ifeq ($(GOARCH),amd64)

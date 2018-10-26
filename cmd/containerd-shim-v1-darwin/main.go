@@ -1,4 +1,4 @@
-// +build darwin freebsd solaris
+// +build darwin
 
 /*
    Copyright The containerd Authors.
@@ -19,6 +19,10 @@
 package main
 
 import (
-	_ "github.com/containerd/containerd/snapshots/native"
-	_ "github.com/containerd/containerd/runtime/v1/linux"
+	"github.com/containerd/containerd/runtime/v2/runu"
+	"github.com/containerd/containerd/runtime/v2/shim"
 )
+
+func main() {
+	shim.Run("io.containerd.runu.v1", runu.New)
+}

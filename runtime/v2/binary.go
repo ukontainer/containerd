@@ -101,6 +101,7 @@ func (b *binary) Start(ctx context.Context, opts *types.Any, onClose func()) (_ 
 	address := strings.TrimSpace(string(out))
 	conn, err := client.Connect(address, client.AnonDialer)
 	if err != nil {
+		log.G(ctx).Warnf("connect =%s=(%s)", address, err)
 		return nil, err
 	}
 	client := ttrpc.NewClient(conn, ttrpc.WithOnClose(onClose))
