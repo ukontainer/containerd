@@ -21,6 +21,7 @@ package runc
 import (
 	"github.com/pkg/errors"
 	"golang.org/x/sys/unix"
+	"runtime"
 )
 
 // NewPipeIO creates pipe pairs to be used with runc
@@ -46,8 +47,11 @@ func NewPipeIO(uid, gid int, opts ...IOOpt) (i IO, err error) {
 			return nil, err
 		}
 		pipes = append(pipes, stdin)
-		if err = unix.Fchown(int(stdin.r.Fd()), uid, gid); err != nil {
-			return nil, errors.Wrap(err, "failed to chown stdin")
+		// XXX: can't chown to socket on darwin
+		if runtime.GOOS != "darwin" {
+			if err = unix.Fchown(int(stdin.r.Fd()), uid, gid); err != nil {
+				return nil, errors.Wrapf(err, "failed to chown stdin %s %s", uid, gid)
+			}
 		}
 	}
 	if option.OpenStdout {
@@ -55,8 +59,11 @@ func NewPipeIO(uid, gid int, opts ...IOOpt) (i IO, err error) {
 			return nil, err
 		}
 		pipes = append(pipes, stdout)
-		if err = unix.Fchown(int(stdout.w.Fd()), uid, gid); err != nil {
-			return nil, errors.Wrap(err, "failed to chown stdout")
+		// XXX: can't chown to socket on darwin
+		if runtime.GOOS != "darwin" {
+			if err = unix.Fchown(int(stdout.w.Fd()), uid, gid); err != nil {
+				return nil, errors.Wrap(err, "failed to chown stdout")
+			}
 		}
 	}
 	if option.OpenStderr {
@@ -64,8 +71,11 @@ func NewPipeIO(uid, gid int, opts ...IOOpt) (i IO, err error) {
 			return nil, err
 		}
 		pipes = append(pipes, stderr)
-		if err = unix.Fchown(int(stderr.w.Fd()), uid, gid); err != nil {
-			return nil, errors.Wrap(err, "failed to chown stderr")
+		// XXX: can't chown to socket on darwin
+		if runtime.GOOS != "darwin" {
+			if err = unix.Fchown(int(stderr.w.Fd()), uid, gid); err != nil {
+				return nil, errors.Wrap(err, "failed to chown stderr")
+			}
 		}
 	}
 	return &pipeIO{
