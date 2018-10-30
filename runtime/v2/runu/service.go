@@ -52,6 +52,9 @@ import (
 	"golang.org/x/sys/unix"
 )
 
+// RunuRoot is the path to the root runu state directory
+const RunuRoot = "/tmp/ctrd/run/containerd/runu"
+
 var (
 	empty   = &ptypes.Empty{}
 	bufPool = sync.Pool{
@@ -192,7 +195,7 @@ func (s *service) Cleanup(ctx context.Context) (*taskAPI.DeleteResponse, error) 
 	if err != nil {
 		return nil, err
 	}
-	r := proc.NewRunc(proc.RuncRoot, path, ns, runtime, "", false)
+	r := proc.NewRunc(RunuRoot, path, ns, runtime, "", false)
 	if err := r.Delete(ctx, s.id, &runcC.DeleteOpts{
 		Force: true,
 	}); err != nil {
@@ -747,7 +750,7 @@ func getTopic(e interface{}) string {
 
 func newInit(ctx context.Context, path, workDir, namespace string, platform rproc.Platform, r *proc.CreateConfig, options *options.Options) (*proc.Init, error) {
 	rootfs := filepath.Join(path, "rootfs")
-	runtime := proc.NewRunc(options.Root, path, namespace, options.BinaryName, options.CriuPath, options.SystemdCgroup)
+	runtime := proc.NewRunc(RunuRoot, path, namespace, options.BinaryName, options.CriuPath, options.SystemdCgroup)
 	p := proc.New(r.ID, runtime, rproc.Stdio{
 		Stdin:    r.Stdin,
 		Stdout:   r.Stdout,
