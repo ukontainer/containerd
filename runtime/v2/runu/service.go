@@ -153,9 +153,6 @@ func (s *service) StartShim(ctx context.Context, id, containerdBinary, container
 	cmd.ExtraFiles = append(cmd.ExtraFiles, f)
 	// XXX: osx doesn't create a sock-file with net.FileListener(os.NewFile(3, "socket"))
 	cmd.Args = append(cmd.Args, "-socket", address)
-	// XXX: dunno why but osx containerd-shim requires stdout/stderr redirection
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
 
 	if err := cmd.Start(); err != nil {
 		return "", err
@@ -284,6 +281,8 @@ func (s *service) Create(ctx context.Context, r *taskAPI.CreateTaskRequest) (_ *
 			return nil, errors.Wrapf(err, "failed to mount rootfs component %v", m)
 		}
 	}
+	// XXX: is three any better place to configure this ?
+	opts.BinaryName = "runu"
 	process, err := newInit(
 		ctx,
 		r.Bundle,

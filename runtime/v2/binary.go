@@ -23,6 +23,7 @@ import (
 	"os"
 	gruntime "runtime"
 	"strings"
+	"time"
 
 	eventstypes "github.com/containerd/containerd/api/events"
 	"github.com/containerd/containerd/events/exchange"
@@ -93,6 +94,9 @@ func (b *binary) Start(ctx context.Context) (_ *shim, err error) {
 		return nil, errors.Wrapf(err, "%s", out)
 	}
 	address := strings.TrimSpace(string(out))
+	// XXX: dunno why but osx needs a sleep before connect
+	// FIXME: need to wait a socket/file creation instead of sleep()
+	time.Sleep (time.Millisecond * 100)
 	conn, err := client.Connect(address, client.AnonDialer)
 	if err != nil {
 		log.G(ctx).Warnf("connect =%s=(%s)", address, err)
