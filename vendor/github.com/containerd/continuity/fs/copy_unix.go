@@ -55,7 +55,9 @@ func copyFileInfo(fi os.FileInfo, name string) error {
 
 	timespec := []syscall.Timespec{StatAtime(st), StatMtime(st)}
 	if err := syscall.UtimesNano(name, timespec); err != nil {
-		return errors.Wrapf(err, "failed to utime %s", name)
+		if (fi.Mode() & os.ModeSymlink) != os.ModeSymlink {
+			return errors.Wrapf(err, "failed to utime %s", name)
+		}
 	}
 
 	return nil

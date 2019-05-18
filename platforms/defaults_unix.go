@@ -18,7 +18,22 @@
 
 package platforms
 
+import (
+	"runtime"
+	specs "github.com/opencontainers/image-spec/specs-go/v1"
+)
+
 // Default returns the default matcher for the platform.
 func Default() MatchComparer {
 	return Only(DefaultSpec())
+}
+
+func DefaultLinux() MatchComparer {
+	platform := specs.Platform{
+		OS:           "linux",
+		Architecture: runtime.GOARCH,
+		// The Variant field will be empty if arch != ARM.
+		Variant: cpuVariant,
+	}
+	return Only(platform)
 }

@@ -19,6 +19,7 @@ package containerd
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/containerd/containerd/content"
 	"github.com/containerd/containerd/errdefs"
@@ -57,10 +58,15 @@ var _ = (Image)(&image{})
 
 // NewImage returns a client image object from the metadata image
 func NewImage(client *Client, i images.Image) Image {
+	// XXX: such a nasty way...
+	platform := platforms.Default()
+	if (strings.Contains(i.Name, "library/alpine")) {
+		platform = platforms.DefaultLinux()
+	}
 	return &image{
 		client:   client,
 		i:        i,
-		platform: platforms.Default(),
+		platform: platform,
 	}
 }
 
