@@ -134,7 +134,10 @@ func WithNewSnapshot(id string, i Image, opts ...snapshots.Opt) NewContainerOpts
 	return func(ctx context.Context, client *Client, c *containers.Container) error {
 		diffIDs, err := i.RootFS(ctx)
 		if err != nil {
-			return err
+			diffIDs, err = i.(*image).i.RootFS(ctx, client.ContentStore(), platforms.DefaultLinux())
+			if err != nil {
+				return err
+			}
 		}
 		setSnapshotterIfEmpty(ctx, client, c)
 		parent := identity.ChainID(diffIDs).String()
