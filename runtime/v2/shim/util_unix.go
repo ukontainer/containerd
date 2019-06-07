@@ -20,8 +20,8 @@ package shim
 
 import (
 	"context"
-	"crypto/sha256"
-	"fmt"
+	_ "crypto/sha256"
+	_ "fmt"
 	"net"
 	"path/filepath"
 	"strings"
