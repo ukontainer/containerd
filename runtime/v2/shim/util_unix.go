@@ -20,9 +20,10 @@ package shim
 
 import (
 	"context"
-	_ "crypto/sha256"
-	_ "fmt"
+	"crypto/sha256"
+	"fmt"
 	"net"
+	"os"
 	"path/filepath"
 	"strings"
 	"syscall"
@@ -48,11 +49,12 @@ func SetScore(pid int) error {
 
 // SocketAddress returns an abstract socket address
 func SocketAddress(ctx context.Context, id string) (string, error) {
-	_, err := namespaces.NamespaceRequired(ctx)
+	ns, err := namespaces.NamespaceRequired(ctx)
 	if err != nil {
 		return "", err
 	}
-	return filepath.Abs("shim.sock")
+	d := sha256.Sum256([]byte(filepath.Join(ns, id)))
+	return filepath.Join(string(filepath.Separator), "/tmp/containerd-shim", fmt.Sprintf("%x.sock", d)), nil
 }
 
 // AnonDialer returns a dialer for an abstract socket
@@ -63,11 +65,10 @@ func AnonDialer(address string, timeout time.Duration) (net.Conn, error) {
 
 // NewSocket returns a new socket
 func NewSocket(address string) (*net.UnixListener, error) {
-/*
 	if len(address) > 106 {
 		return nil, errors.Errorf("%q: unix socket path too long (> 106)", address)
 	}
-*/
+	os.Mkdir("/tmp/containerd-shim", 0711)
 	l, err := net.Listen("unix", ""+address)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to listen to abstract unix socket %q", address)
