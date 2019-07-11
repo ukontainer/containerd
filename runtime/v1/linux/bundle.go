@@ -135,7 +135,7 @@ func (b *bundle) legacyShimAddress(namespace string) string {
 
 func (b *bundle) shimAddress(namespace string) string {
 	d := sha256.Sum256([]byte(filepath.Join(namespace, b.id)))
-	return filepath.Join(string(filepath.Separator), "containerd-shim", fmt.Sprintf("%x.sock", d))
+	return filepath.Join(string(filepath.Separator), "/tmp/containerd-shim", fmt.Sprintf("%x.sock", d))
 }
 
 func (b *bundle) loadAddress() (string, error) {

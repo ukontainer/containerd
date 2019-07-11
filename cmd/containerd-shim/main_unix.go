@@ -202,7 +202,7 @@ func serve(ctx context.Context, server *ttrpc.Server, path string) error {
 		if len(path) > 106 {
 			return errors.Errorf("%q: unix socket path too long (> 106)", path)
 		}
-		l, err = net.Listen("unix", "\x00"+path)
+		l, err = net.Listen("unix", ""+path)
 	}
 	if err != nil {
 		return err
@@ -233,6 +233,9 @@ func handleSignals(logger *logrus.Entry, signals chan os.Signal, server *ttrpc.S
 			case unix.SIGCHLD:
 				if err := shim.Reap(); err != nil {
 					logger.WithError(err).Error("reap exit status")
+				}
+				if err := shim.ReapMore(sv); err != nil {
+					logger.WithError(err).Error("reap(2nd) exit status")
 				}
 			case unix.SIGTERM, unix.SIGINT:
 				go termOnce.Do(func() {

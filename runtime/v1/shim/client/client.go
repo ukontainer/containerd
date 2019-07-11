@@ -199,7 +199,7 @@ func newSocket(address string) (*net.UnixListener, error) {
 	if len(address) > 106 {
 		return nil, errors.Errorf("%q: unix socket path too long (> 106)", address)
 	}
-	l, err := net.Listen("unix", "\x00"+address)
+	l, err := net.Listen("unix", ""+address)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to listen to abstract unix socket %q", address)
 	}
@@ -213,7 +213,7 @@ func connect(address string, d func(string, time.Duration) (net.Conn, error)) (n
 
 func annonDialer(address string, timeout time.Duration) (net.Conn, error) {
 	address = strings.TrimPrefix(address, "unix://")
-	return net.DialTimeout("unix", "\x00"+address, timeout)
+	return net.DialTimeout("unix", ""+address, timeout)
 }
 
 // WithConnect connects to an existing shim

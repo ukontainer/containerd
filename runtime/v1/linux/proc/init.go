@@ -275,6 +275,12 @@ func (p *Init) setExited(status int) {
 	close(p.waitBlock)
 }
 
+// XXX: we need to acess p.exited variable without lock
+// because signal handler (ReapMore) is called during Status() is in.
+func (p *Init) IsExited() bool {
+	return !p.exited.IsZero()
+}
+
 // Delete the init process
 func (p *Init) Delete(ctx context.Context) error {
 	p.mu.Lock()
