@@ -50,7 +50,7 @@ func ReapMore(sv *Service) error {
 		if (err != nil && !p.(*proc.Init).IsExited()) {
 			exits = append(exits, sys.Exit{
 				Pid:    p.Pid(),
-				Status: -1, // XXX
+				Status: 0, // XXX
 			})
 
 			logrus.Debugf("detect exited (no SIGCHILD?) pid=%d",
