@@ -1,5 +1,3 @@
-// +build freebsd openbsd
-
 /*
    Copyright The containerd Authors.
 
@@ -18,24 +16,30 @@
 
 package mount
 
-import "github.com/pkg/errors"
-
-var (
-	// ErrNotImplementOnUnix is returned for methods that are not implemented
-	ErrNotImplementOnUnix = errors.New("not implemented under unix")
+import (
+	"os"
 )
 
-// Mount is not implemented on this platform
+// Use symlink instead of union mount on darwin
 func (m *Mount) Mount(target string) error {
-	return ErrNotImplementOnUnix
+	if err := os.Remove(target); err != nil {
+		return err
+	}
+	if err := os.Symlink(m.Source, target); err != nil {
+		return err
+	}
+
+	return nil
 }
 
-// Unmount is not implemented on this platform
+// Unmount is just a rm of symlink
 func Unmount(mount string, flags int) error {
-	return ErrNotImplementOnUnix
+	os.RemoveAll(mount)
+	return os.Mkdir(mount, 0755)
 }
 
-// UnmountAll is not implemented on this platform
+// UnmountAll is just a rm of symlink
 func UnmountAll(mount string, flags int) error {
-	return ErrNotImplementOnUnix
+	os.RemoveAll(mount)
+	return os.Mkdir(mount, 0755)
 }
