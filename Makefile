@@ -188,7 +188,7 @@ benchmark: ## run benchmarks tests
 
 FORCE:
 
-define BUILD_BINARY =
+define BUILD_BINARY
 @echo "$(WHALE) $@"
 @go build ${DEBUG_GO_GCFLAGS} ${GO_GCFLAGS} ${GO_BUILD_FLAGS} -o $@ ${GO_LDFLAGS} ${GO_TAGS}  ./$<
 endef
