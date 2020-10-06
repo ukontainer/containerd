@@ -1,5 +1,3 @@
-// +build !windows,!darwin
-
 /*
    Copyright The containerd Authors.
 
@@ -24,14 +22,14 @@ const (
 	DefaultRootDir = "/var/lib/containerd"
 	// DefaultStateDir is the default location used by containerd to store
 	// transient data
-	DefaultStateDir = "/run/containerd"
+	DefaultStateDir = "/var/run/containerd"
 	// DefaultAddress is the default unix socket address
-	DefaultAddress = "/run/containerd/containerd.sock"
+	DefaultAddress = "/var/run/containerd/containerd.sock"
 	// DefaultDebugAddress is the default unix socket address for pprof data
-	DefaultDebugAddress = "/run/containerd/debug.sock"
+	DefaultDebugAddress = "/var/run/containerd/debug.sock"
 	// DefaultFIFODir is the default location used by client-side cio library
 	// to store FIFOs.
-	DefaultFIFODir = "/run/containerd/fifo"
-	// DefaultRuntime is the default linux runtime
-	DefaultRuntime = "io.containerd.runc.v2"
+	DefaultFIFODir = "/var/run/containerd/fifo"
+	// DefaultRuntime is the default darwin runtime
+	DefaultRuntime = "io.containerd.darwin.v1"
 )

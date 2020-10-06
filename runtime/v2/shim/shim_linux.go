@@ -21,6 +21,11 @@ import (
 	"github.com/containerd/ttrpc"
 )
 
+const (
+	unixAbstSockPrefix = "\x00"
+	shimSockDir        = ""
+)
+
 func newServer() (*ttrpc.Server, error) {
 	return ttrpc.NewServer(ttrpc.WithServerHandshaker(ttrpc.UnixSocketRequireSameUser()))
 }

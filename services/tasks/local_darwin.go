@@ -16,21 +16,20 @@
    limitations under the License.
 */
 
-package shim
+package tasks
 
 import (
-	"github.com/containerd/ttrpc"
+	"github.com/containerd/containerd/plugin"
+	"github.com/containerd/containerd/runtime"
 )
 
-const (
-	unixAbstSockPrefix = ""
-	shimSockDir        = "/var/run/containerd/"
-)
-
-func newServer() (*ttrpc.Server, error) {
-	return ttrpc.NewServer()
+var tasksServiceRequires = []plugin.Type{
+	plugin.RuntimePluginV2,
+	plugin.MetadataPlugin,
+	plugin.TaskMonitorPlugin,
 }
 
-func subreaper() error {
-	return nil
+// loadV1Runtimes on darwin returns an empty map. There are no v1 runtimes
+func loadV1Runtimes(ic *plugin.InitContext) (map[string]runtime.PlatformRuntime, error) {
+	return make(map[string]runtime.PlatformRuntime), nil
 }

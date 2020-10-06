@@ -58,9 +58,10 @@ func (s *subscriber) do(fn func()) {
 
 // Reap should be called when the process receives an SIGCHLD.  Reap will reap
 // all exited processes and close their wait channels
-func Reap() error {
+func Reap(bundlePath string) error {
 	now := time.Now()
-	exits, err := reap(false)
+	exits, _ := reap(false)
+	exits, err := reapMore(bundlePath, exits)
 	for _, e := range exits {
 		done := Default.notify(runc.Exit{
 			Timestamp: now,

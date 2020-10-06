@@ -234,7 +234,7 @@ func handleSignals(logger *logrus.Entry, signals chan os.Signal, server *ttrpc.S
 		case s := <-signals:
 			switch s {
 			case unix.SIGCHLD:
-				if err := reaper.Reap(); err != nil {
+				if err := reaper.Reap(""); err != nil {
 					logger.WithError(err).Error("reap exit status")
 				}
 			case unix.SIGTERM, unix.SIGINT:

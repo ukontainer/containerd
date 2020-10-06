@@ -1,4 +1,4 @@
-// +build darwin
+// +build !darwin,!windows
 
 /*
    Copyright The containerd Authors.
@@ -16,21 +16,8 @@
    limitations under the License.
 */
 
-package shim
+package reaper
 
-import (
-	"github.com/containerd/ttrpc"
-)
-
-const (
-	unixAbstSockPrefix = ""
-	shimSockDir        = "/var/run/containerd/"
-)
-
-func newServer() (*ttrpc.Server, error) {
-	return ttrpc.NewServer()
-}
-
-func subreaper() error {
-	return nil
+func reapMore(bundlePath string, exits []exit) ([]exit, error) {
+	return exits, nil
 }

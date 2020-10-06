@@ -61,7 +61,7 @@ func serveListener(path string) (net.Listener, error) {
 		if len(path) > 106 {
 			return nil, errors.Errorf("%q: unix socket path too long (> 106)", path)
 		}
-		l, err = net.Listen("unix", "\x00"+path)
+		l, err = net.Listen("unix", unixAbstSockPrefix+path)
 	}
 	if err != nil {
 		return nil, err
@@ -80,7 +80,7 @@ func handleSignals(ctx context.Context, logger *logrus.Entry, signals chan os.Si
 		case s := <-signals:
 			switch s {
 			case unix.SIGCHLD:
-				if err := reaper.Reap(); err != nil {
+				if err := reaper.Reap(bundlePath); err != nil {
 					logger.WithError(err).Error("reap exit status")
 				}
 			case unix.SIGPIPE:

@@ -28,6 +28,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"testing"
 	"time"
 
@@ -747,6 +748,13 @@ func TestBreakouts(t *testing.T) {
 	}
 
 	for _, bo := range breakouts {
+		if runtime.GOOS == "darwin" {
+			if bo.name == "HardlinkSymlinkRelative" ||
+				bo.name == "HardlinkSymlinkBeforeCreateTarget" ||
+				bo.name == "HardlinkSymlinkAbsolute" {
+				t.Skip()
+			}
+		}
 		t.Run(bo.name, makeWriterToTarTest(bo.w, bo.apply, bo.validator, bo.err))
 	}
 }

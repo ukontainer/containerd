@@ -16,21 +16,19 @@
    limitations under the License.
 */
 
-package shim
+package platforms
 
 import (
-	"github.com/containerd/ttrpc"
+	"runtime"
+
+	specs "github.com/opencontainers/image-spec/specs-go/v1"
 )
 
-const (
-	unixAbstSockPrefix = ""
-	shimSockDir        = "/var/run/containerd/"
-)
-
-func newServer() (*ttrpc.Server, error) {
-	return ttrpc.NewServer()
-}
-
-func subreaper() error {
-	return nil
+// Default returns the default matcher for the platform.
+func Default() MatchComparer {
+	return Ordered(DefaultSpec(), specs.Platform{
+		// darwin runtime also supports Linux binary via runu/LKL
+		OS:           "linux",
+		Architecture: runtime.GOARCH,
+	})
 }

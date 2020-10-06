@@ -20,6 +20,11 @@ package shim
 
 import "github.com/containerd/ttrpc"
 
+const (
+	unixAbstSockPrefix = "\x00"
+	shimDockDir        = ""
+)
+
 func newServer() (*ttrpc.Server, error) {
 	return ttrpc.NewServer()
 }
