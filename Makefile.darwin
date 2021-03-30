@@ -19,5 +19,5 @@ COMMANDS += containerd-shim
 # amd64 supports go test -race,
 # but causes race-limit of simultaneously goroutines, thus disabled
 ifeq ($(GOARCH),amd64)
-	TESTFLAGS_RACE=
+	TESTFLAGS_RACE= -race
 endif

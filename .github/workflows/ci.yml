@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - 'release/**'
+      - '**'
   pull_request:
     branches:
       - master
@@ -31,8 +32,8 @@ jobs:
       - name: Set env
         shell: bash
         run: |
-          echo "::set-env name=GOPATH::${{ github.workspace }}"
-          echo "::add-path::${{ github.workspace }}/bin"
+          echo "GOPATH=${{ github.workspace }}" >> $GITHUB_ENV
+          echo "${{ github.workspace }}/bin" >> $GITHUB_PATH
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -71,8 +72,8 @@ jobs:
       - name: Set env
         shell: bash
         run: |
-          echo "::set-env name=GOPATH::${{ github.workspace }}"
-          echo "::add-path::${{ github.workspace }}/bin"
+          echo "GOPATH=${{ github.workspace }}" >> $GITHUB_ENV
+          echo "${{ github.workspace }}/bin" >> $GITHUB_PATH
 
       #
       # Checkout repos
@@ -143,8 +144,8 @@ jobs:
       - name: Set env
         shell: bash
         run: |
-          echo "::set-env name=GOPATH::${{ github.workspace }}"
-          echo "::add-path::${{ github.workspace }}/bin"
+          echo "GOPATH=${{ github.workspace }}" >> $GITHUB_ENV
+          echo "${{ github.workspace }}/bin" >> $GITHUB_PATH
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -190,8 +191,8 @@ jobs:
       - name: Set env
         shell: bash
         run: |
-          echo "::set-env name=GOPATH::${{ github.workspace }}"
-          echo "::add-path::${{ github.workspace }}/bin"
+          echo "GOPATH=${{ github.workspace }}" >> $GITHUB_ENV
+          echo "${{ github.workspace }}/bin" >> $GITHUB_PATH
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -227,8 +228,8 @@ jobs:
       - name: Set env
         shell: bash
         run: |
-          echo "::set-env name=GOPATH::${{ github.workspace }}"
-          echo "::add-path::${{ github.workspace }}/bin"
+          echo "GOPATH=${{ github.workspace }}" >> $GITHUB_ENV
+          echo "${{ github.workspace }}/bin" >> $GITHUB_PATH
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -259,8 +260,8 @@ jobs:
       - name: Set env
         shell: bash
         run: |
-          echo "::set-env name=GOPATH::${{ github.workspace }}"
-          echo "::add-path::${{ github.workspace }}/src/github.com/containerd/containerd/bin"
+          echo "GOPATH=${{ github.workspace }}" >> $GITHUB_ENV
+          echo "${{ github.workspace }}/src/github.com/containerd/containerd/bin" >> $GITHUB_PATH
 
       - name: Checkout containerd
         uses: actions/checkout@v2
@@ -340,8 +341,8 @@ jobs:
       - name: Set env
         shell: bash
         run: |
-          echo "::set-env name=GOPATH::${{ github.workspace }}"
-          echo "::add-path::${{ github.workspace }}/bin"
+          echo "GOPATH=${{ github.workspace }}" >> $GITHUB_ENV
+          echo "${{ github.workspace }}/bin" >> $GITHUB_PATH
 
       - name: Checkout containerd
         uses: actions/checkout@v2
@@ -471,8 +472,8 @@ jobs:
       - name: Set env
         shell: bash
         run: |
-          echo "::set-env name=GOPATH::${{ github.workspace }}"
-          echo "::add-path::${{ github.workspace }}/src/github.com/containerd/containerd/bin"
+          echo "GOPATH=${{ github.workspace }}" >> $GITHUB_ENV
+          echo "${{ github.workspace }}/src/github.com/containerd/containerd/bin" >> $GITHUB_PATH
 
       - name: Checkout containerd
         uses: actions/checkout@v2
@@ -492,7 +493,7 @@ jobs:
       - name: Install runtime
         shell: bash
         run: |
-          SHIM_COMMIT=v0.8.2
+          SHIM_COMMIT=v0.8.3
           GO111MODULE=on go get -v github.com/ukontainer/runu@"${SHIM_COMMIT}"
           bindir="$(pwd)/bin/"
           cd src/github.com/ukontainer/runu
